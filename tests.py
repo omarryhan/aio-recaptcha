@@ -5,15 +5,15 @@ import time
 import sanic
 import pytest
 
-import recaptcha
+import aiorecaptcha
 
 
 # Test: html, js, verify, RecaptchaError, TESTING_SECRET_KEY, TESTING_SITE_KEY
 def test_html():
-    assert recaptcha.html() == '<div class="g-recaptcha" data-theme="light" data-size="normal" data-type="image"></div>'
+    assert aiorecaptcha.html() == '<div class="g-recaptcha" data-theme="light" data-size="normal" data-type="image"></div>'
 
 def test_html_with_kwargs():
-    assert recaptcha.html(
+    assert aiorecaptcha.html(
         site_key='asdasdasd',
         theme='dark',
         badge='asdsad',
@@ -29,10 +29,10 @@ def test_html_with_kwargs():
             'expired-callback="insdfosdf" error-callback="ajisdfnon"></div>'
 
 def test_js():
-    assert recaptcha.js() == "<script src='//www.google.com/recaptcha/api.js' async defer></script>"
+    assert aiorecaptcha.js() == "<script src='//www.google.com/recaptcha/api.js' async defer></script>"
 
 def test_js_with_kwargs():
-    assert recaptcha.js(
+    assert aiorecaptcha.js(
         onload='asdasdgsdf',
         render='sdifosdfn',
         language='sgisdsfd',
@@ -40,7 +40,7 @@ def test_js_with_kwargs():
         defer=True
     ) == "<script src='//www.google.com/recaptcha/api.js?onload=asdasdgsdf&render=sdifosdfn&hl=sgisdsfd' defer></script>"
 
-    assert recaptcha.js(
+    assert aiorecaptcha.js(
         onload='asdasdgsdf',
         render='sdifosdfn',
         language='sgisdsfd',
@@ -50,7 +50,7 @@ def test_js_with_kwargs():
 
 def test_js_fails_on_extra_kwargs():
     with pytest.raises(TypeError) as e:
-        recaptcha.js(
+        aiorecaptcha.js(
             onload='asd',
             asd='asd'
         )
@@ -60,7 +60,7 @@ def test_js_fails_on_extra_kwargs():
 
 def test_html_fails_on_extra_kwargs():
     with pytest.raises(TypeError) as e:
-        recaptcha.html(
+        aiorecaptcha.html(
             site_key='asd',
             asd='asd'
         )
@@ -69,8 +69,8 @@ def test_html_fails_on_extra_kwargs():
                 'site_key' not in str(e)
 
 def test_verify(event_loop):
-    HTML = recaptcha.html(site_key=recaptcha.TESTING_SITE_KEY, theme='dark', callback='verifyCallback')
-    JS = recaptcha.js(language='ar')
+    HTML = aiorecaptcha.html(site_key=aiorecaptcha.TESTING_SITE_KEY, theme='dark', callback='verifyCallback')
+    JS = aiorecaptcha.js(language='ar')
     JS_CALLBACK = \
     '''
     <script type="text/javascript">
@@ -94,8 +94,8 @@ def test_verify(event_loop):
             resp = request.form['g-recaptcha-response'][0]
             assert resp is not None
             assert isinstance(resp, str)
-            await recaptcha.verify(
-                secret=recaptcha.TESTING_SECRET_KEY,
+            await aiorecaptcha.verify(
+                secret=aiorecaptcha.TESTING_SECRET_KEY,
                 response=resp,
                 remoteip=request.ip
             )
