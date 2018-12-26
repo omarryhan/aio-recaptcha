@@ -18,7 +18,7 @@ def test_html_with_kwargs():
         theme='dark',
         badge='asdsad',
         size='asd',
-        type='asdasd',
+        type_='asdasd',
         tabindex=4,
         callback='asddgg',
         expired_callback='insdfosdf',

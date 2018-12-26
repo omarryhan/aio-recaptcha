@@ -144,7 +144,7 @@ def html(**kwargs):
 
             * Default: normal
 
-        type:
+        type_:
 
             * Optional
 
@@ -191,7 +191,7 @@ def html(**kwargs):
     theme = {'data-theme': kwargs.pop('theme', 'light')}
     badge = {'data-badge': kwargs.pop('badge', None)}
     size = {'data-size': kwargs.pop('size', 'normal')}
-    type_ = {'data-type': kwargs.pop('type', 'image')}
+    type_ = {'data-type': kwargs.pop('type_', 'image')}
     tabindex = {'data-tabindex': kwargs.pop('tabindex', None)}
     callback = {'data-callback': kwargs.pop('callback', None)}
     expired_callback = {'expired-callback': kwargs.pop('expired_callback', None)}
