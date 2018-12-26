@@ -6,12 +6,16 @@
 
 ## Usage
 
-    def render_captcha():
-        render(recaptcha.html(site_key='your_site_key') + recaptcha.js())
+    import aiorecaptcha
 
-    def verify_captcha(response_received_from_form):
+    @app.route('/')
+    def render_recaptcha():
+        render(aiorecaptcha.html(site_key='your_site_key') + aiorecaptcha.js())
+
+    @app.route('/verify', methods=['POST'])
+    async def verify_recaptcha(response_received_from_form):
         try:
-            await recaptcha.verify(client_secret, response_recieved_from_form)
+            await aiorecaptcha.verify(secret=client_secret, response=response_recieved_from_form)
 
         except recaptcha.RecaptchaError:
             return 'No! Only hoomans!'
