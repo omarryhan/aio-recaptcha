@@ -13,4 +13,4 @@ matrix:
 install:
   pip install pytest pytest-asyncio sanic aiohttp
 script: 
-  sh test.sh
+  chmod u+x test.sh && sh test.sh
