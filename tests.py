@@ -1,6 +1,7 @@
 import webbrowser
 import asyncio
 import time
+import os
 
 import sanic
 import pytest
@@ -69,6 +70,9 @@ def test_html_fails_on_extra_kwargs():
                 'site_key' not in str(e)
 
 def test_verify(event_loop):
+    if os.getenv('travis_is_ran_by_bots') == 'true':
+        pytest.skip('Travis is ran by bots')
+
     HTML = aiorecaptcha.html(site_key=aiorecaptcha.TESTING_SITE_KEY, theme='dark', callback='verifyCallback')
     JS = aiorecaptcha.js(language='ar')
     JS_CALLBACK = \
