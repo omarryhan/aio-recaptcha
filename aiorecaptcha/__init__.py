@@ -44,7 +44,7 @@ def js(**kwargs):
               
             * Defaults to onload, which will render the widget in the first g-recaptcha tag it finds.
 
-            * One of: ``("explicit", "onload")``
+            * Either: ``"onload"`` or explicitly specify a widget value
 
         language (str):
 
