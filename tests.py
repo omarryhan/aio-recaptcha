@@ -96,7 +96,6 @@ def test_verify(event_loop):
     async def verify(request):
         try:
             resp = request.form['g-recaptcha-response'][0]
-            assert resp is not None
             assert isinstance(resp, str)
             await aiorecaptcha.verify(
                 secret=aiorecaptcha.TESTING_SECRET_KEY,
@@ -109,5 +108,5 @@ def test_verify(event_loop):
                     'it\'s a test token.\n\n\n')
             app.stop()
 
-    webbrowser.open('localhost:8000')
-    app.run()
+    webbrowser.open('localhost:7999')
+    app.run(port=7999)
