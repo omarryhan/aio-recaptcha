@@ -270,7 +270,7 @@ async def verify(
             json_resp = await http_resp.json()
 
 
-    if json_resp.get('success') == 'true':
+    if json_resp.get('success') is True:
         return json_resp
 
     for error_code in json_resp.get('error-codes', []):
