@@ -4,6 +4,7 @@ import time
 import os
 
 import sanic
+from sanic import response
 import pytest
 
 import aiorecaptcha
@@ -73,7 +74,10 @@ def test_verify(event_loop):
     if os.getenv('travis_is_ran_by_bots') == 'true':
         pytest.skip('Travis is ran by bots')
 
-    HTML = aiorecaptcha.html(site_key=aiorecaptcha.TESTING_SITE_KEY, theme='dark', callback='verifyCallback')
+    TESTING_SITE_KEY = aiorecaptcha.TESTING_SITE_KEY
+    TESTING_SECRET_KEY = aiorecaptcha.TESTING_SECRET_KEY
+
+    HTML = aiorecaptcha.html(site_key=TESTING_SITE_KEY, theme='dark', callback='verifyCallback')
     JS = aiorecaptcha.js(language='ar')
     JS_CALLBACK = \
     '''
@@ -83,7 +87,7 @@ def test_verify(event_loop):
         var xhr = new XMLHttpRequest();
         xhr.open("POST", '/verify', true);
         xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
-        xhr.send("g-recaptcha-response=" + response); 
+        xhr.send("g-recaptcha-response=" + response);
     };
     </script>
     '''
@@ -98,15 +102,13 @@ def test_verify(event_loop):
             resp = request.form['g-recaptcha-response'][0]
             assert isinstance(resp, str)
             await aiorecaptcha.verify(
-                secret=aiorecaptcha.TESTING_SECRET_KEY,
+                secret=TESTING_SECRET_KEY,
                 response=resp,
                 remoteip=request.ip
             )
         finally:
-            print('\n\n\nThis test will falsely raise missing-input-response error ' + \
-                    'whether g-recaptcha-response was passed to verify() or not... \nProbably because ' + \
-                    'it\'s a test token.\n\n\n')
             app.stop()
+            return response.html('')
 
     webbrowser.open('localhost:7999')
     app.run(port=7999)

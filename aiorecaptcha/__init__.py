@@ -15,8 +15,25 @@ This site is protected by reCAPTCHA and the Google
     <a href="https://policies.google.com/terms">Terms of Service</a> apply.
 '''
 
+RECAPTCHA_VERIFY_URL = 'https://www.google.com/recaptcha/api/siteverify'
+RECAPTCHA_ERROR_CODES = {
+    'missing-input-secret': 'The secret parameter is missing.',
+    'invalid-input-secret': 'The secret parameter is invalid or malformed.',
+    'missing-input-response': 'The response parameter is missing.',
+    'invalid-input-response': 'The response parameter is invalid or malformed.',
+    'bad-request': 'bad-request	The request is invalid or malformed.'
+}
+
+RECAPTCHA_SCRIPT_URL = 'www.google.com/recaptcha/api.js'
+BASE_JS = "<script src='//{SCRIPT_URL}'{ASYNC_DEFER}></script>"
+
+BASE_HTML = '<div class="g-recaptcha"{}></div>'
+
 class RecaptchaError(Exception):
-    pass
+    def __init__(self, msg, *args, **kwargs):
+        self.msg = msg
+        super().__init__(msg, *args, **kwargs)
+
 
 def js(**kwargs):
     '''
@@ -72,9 +89,6 @@ def js(**kwargs):
     '''
 
     # 1. JS
-    RECAPTCHA_SCRIPT_URL = 'www.google.com/recaptcha/api.js'
-    BASE_JS = "<script src='//{SCRIPT_URL}'{ASYNC_DEFER}></script>"
-
     onload = {'onload': kwargs.pop('onload', None)}
     render = {'render': kwargs.pop('render', None)}
     language = {'hl': kwargs.pop('language', None)}
@@ -200,8 +214,6 @@ def html(**kwargs):
     if kwargs:
         raise TypeError('Extra kwargs: ' + str(kwargs))
 
-    BASE_HTML = '<div class="g-recaptcha"{}></div>'
-
     kwargs = ''
     for kwarg in [
         site_key,
@@ -251,27 +263,21 @@ async def verify(
             * The user's IP address.
     '''
 
-    RECAPTCHA_VERIFY_URL = 'https://www.google.com/recaptcha/api/siteverify'
-    RECAPTCHA_ERROR_CODES = {
-        'missing-input-secret': 'The secret parameter is missing.',
-        'invalid-input-secret': 'The secret parameter is invalid or malformed.',
-        'missing-input-response': 'The response parameter is missing.',
-        'invalid-input-response': 'The response parameter is invalid or malformed.',
-        'bad-request': 'bad-request	The request is invalid or malformed.'
-    }
-
     data = dict(secret=secret,response=response)
     if remoteip is not None:
         data['remoteip'] = remoteip
     form = urlencode(data)
 
     async with aiohttp.ClientSession() as sess:
-        async with sess.post(url=RECAPTCHA_VERIFY_URL, data=form) as http_resp:
+        async with sess.post(
+            url=RECAPTCHA_VERIFY_URL,
+            data=form,
+            headers={'Content-Type': 'application/x-www-form-urlencoded'}
+        ) as http_resp:
             json_resp = await http_resp.json()
 
-
     if json_resp.get('success') is True:
-        return json_resp
+        return
 
     for error_code in json_resp.get('error-codes', []):
         if error_code in RECAPTCHA_ERROR_CODES:
