@@ -3,14 +3,16 @@
   <p align="center">
     <a href="https://travis-ci.org/omarryhan/aio-recaptcha"><img alt="Build Status" src="https://travis-ci.org/omarryhan/aio-recaptcha.svg?branch=master"></a>
     <a href="https://github.com/omarryhan/aio-recaptcha"><img alt="Software License" src="https://img.shields.io/badge/license-MIT-brightgreen.svg?style=flat-square"></a>
+    <a href="https://pepy.tech/badge/aio-recaptcha"><img alt="Downloads" src="https://pepy.tech/badge/aio-recaptcha"></a>
+    <a href="https://pepy.tech/badge/aio-recaptcha/month"><img alt="Monthly Downloads" src="https://pepy.tech/badge/aio-recaptcha/month"></a>
   </p>
 </p>
 
-# Async Recaptcha
+# Async Recaptcha V2 & V3
 
-## Install
+## Setup ⚙️
 
-    $ pip install --user aio-recaptcha
+    $ pip install aio-recaptcha
 
 ## Usage
 
@@ -42,4 +44,22 @@
 
 Run:
 
-    $ /aio-recaptcha/test.sh
+    $ aio-recaptcha/test.sh
+
+## Contact 📧
+
+Like my work? Have an exciting product and think we can work together?
+
+Let's talk. Send me an email @ omarryhan@gmail.com
+
+## Buy me a coffee ☕
+
+**Bitcoin:** 3NmywNKr1Lzo8gyNXFUnzvboziACpEa31z
+
+**Ethereum:** 0x1E1400C31Cd813685FE0f6D29E0F91c1Da4675aE
+
+**Bitcoin Cash:** qqzn7rsav6hr3zqcp4829s48hvsvjat4zq7j42wkxd
+
+**Litecoin:** MB5M3cE3jE4E8NwGCWoFjLvGqjDqPyyEJp
+
+**Paypal:** https://paypal.me/omarryhan
