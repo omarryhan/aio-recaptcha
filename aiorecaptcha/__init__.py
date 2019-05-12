@@ -2,32 +2,40 @@ from urllib.parse import urlencode
 import aiohttp
 
 
-__all__ = ['html', 'js', 'verify', 'RecaptchaError', 'TESTING_SITE_KEY', 'TESTING_SECRET_KEY']
+__all__ = [
+    "html",
+    "js",
+    "verify",
+    "RecaptchaError",
+    "TESTING_SITE_KEY",
+    "TESTING_SECRET_KEY",
+]
 
 # ref: https://developers.google.com/recaptcha/docs/faq#id-like-to-hide-the-recaptcha-v3-badge-what-is-allowed
-TESTING_SITE_KEY = '6LeIxAcTAAAAAJcZVRqyHh71UMIEGNQ_MXjiZKhI'
-TESTING_SECRET_KEY = '6LeIxAcTAAAAAGG-vFI1TnRWxMZNFuojJ4WifJWe'
+TESTING_SITE_KEY = "6LeIxAcTAAAAAJcZVRqyHh71UMIEGNQ_MXjiZKhI"
+TESTING_SECRET_KEY = "6LeIxAcTAAAAAGG-vFI1TnRWxMZNFuojJ4WifJWe"
 
 # Misc
-CONSENT = '''
+CONSENT = """
 This site is protected by reCAPTCHA and the Google
     <a href="https://policies.google.com/privacy">Privacy Policy</a> and
     <a href="https://policies.google.com/terms">Terms of Service</a> apply.
-'''
+"""
 
-RECAPTCHA_VERIFY_URL = 'https://www.google.com/recaptcha/api/siteverify'
+RECAPTCHA_VERIFY_URL = "https://www.google.com/recaptcha/api/siteverify"
 RECAPTCHA_ERROR_CODES = {
-    'missing-input-secret': 'The secret parameter is missing.',
-    'invalid-input-secret': 'The secret parameter is invalid or malformed.',
-    'missing-input-response': 'The response parameter is missing.',
-    'invalid-input-response': 'The response parameter is invalid or malformed.',
-    'bad-request': 'bad-request	The request is invalid or malformed.'
+    "missing-input-secret": "The secret parameter is missing.",
+    "invalid-input-secret": "The secret parameter is invalid or malformed.",
+    "missing-input-response": "The response parameter is missing.",
+    "invalid-input-response": "The response parameter is invalid or malformed.",
+    "bad-request": "bad-request	The request is invalid or malformed.",
 }
 
-RECAPTCHA_SCRIPT_URL = 'www.google.com/recaptcha/api.js'
+RECAPTCHA_SCRIPT_URL = "www.google.com/recaptcha/api.js"
 BASE_JS = "<script src='//{SCRIPT_URL}'{ASYNC_DEFER}></script>"
 
 BASE_HTML = '<div class="g-recaptcha"{}></div>'
+
 
 class RecaptchaError(Exception):
     def __init__(self, msg, *args, **kwargs):
@@ -36,7 +44,7 @@ class RecaptchaError(Exception):
 
 
 def js(**kwargs):
-    '''
+    """
     Get JS script that loads the Recaptcha V2/V3 script
 
     Appending this script to your HTML will expose the following API:
@@ -86,38 +94,38 @@ def js(**kwargs):
             * Add def tag to JS Script
 
             * Default True
-    '''
+    """
 
     # 1. JS
-    onload = {'onload': kwargs.pop('onload', None)}
-    render = {'render': kwargs.pop('render', None)}
-    language = {'hl': kwargs.pop('language', None)}
-    async_ = kwargs.pop('async_', True)
-    defer = kwargs.pop('defer', True)
+    onload = {"onload": kwargs.pop("onload", None)}
+    render = {"render": kwargs.pop("render", None)}
+    language = {"hl": kwargs.pop("language", None)}
+    async_ = kwargs.pop("async_", True)
+    defer = kwargs.pop("defer", True)
 
     if kwargs:
-        raise TypeError('Extra kwargs: ' + str(kwargs))
+        raise TypeError("Extra kwargs: " + str(kwargs))
 
     url = RECAPTCHA_SCRIPT_URL
 
     if onload or render or language:
-        url += '?'
+        url += "?"
         for arg in [onload, render, language]:
             if None not in arg.values():
-                url += (urlencode(arg) + '&')
+                url += urlencode(arg) + "&"
         url = url[:-1]  # Remove trailing and
 
-    async_defer = ''
+    async_defer = ""
     if async_ is True:
-        async_defer += ' async'
+        async_defer += " async"
     if defer is True:
-        async_defer += ' defer'
-        
+        async_defer += " defer"
+
     return BASE_JS.format(SCRIPT_URL=url, ASYNC_DEFER=async_defer)
 
 
 def html(**kwargs):
-    '''
+    """
     Get HTML <div> used by Recaptcha's JS script
 
     Arguments:
@@ -199,22 +207,22 @@ def html(**kwargs):
 
             * If you specify a function here, you are responsible for informing the user that they should retry.
 
-    '''
+    """
 
-    site_key = {'data-sitekey': kwargs.pop('site_key', None)}
-    theme = {'data-theme': kwargs.pop('theme', 'light')}
-    badge = {'data-badge': kwargs.pop('badge', None)}
-    size = {'data-size': kwargs.pop('size', 'normal')}
-    type_ = {'data-type': kwargs.pop('type_', 'image')}
-    tabindex = {'data-tabindex': kwargs.pop('tabindex', None)}
-    callback = {'data-callback': kwargs.pop('callback', None)}
-    expired_callback = {'expired-callback': kwargs.pop('expired_callback', None)}
-    error_callback = {'error-callback': kwargs.pop('error_callback', None)}
+    site_key = {"data-sitekey": kwargs.pop("site_key", None)}
+    theme = {"data-theme": kwargs.pop("theme", "light")}
+    badge = {"data-badge": kwargs.pop("badge", None)}
+    size = {"data-size": kwargs.pop("size", "normal")}
+    type_ = {"data-type": kwargs.pop("type_", "image")}
+    tabindex = {"data-tabindex": kwargs.pop("tabindex", None)}
+    callback = {"data-callback": kwargs.pop("callback", None)}
+    expired_callback = {"expired-callback": kwargs.pop("expired_callback", None)}
+    error_callback = {"error-callback": kwargs.pop("error_callback", None)}
 
     if kwargs:
-        raise TypeError('Extra kwargs: ' + str(kwargs))
+        raise TypeError("Extra kwargs: " + str(kwargs))
 
-    kwargs = ''
+    kwargs = ""
     for kwarg in [
         site_key,
         theme,
@@ -226,18 +234,15 @@ def html(**kwargs):
         expired_callback,
         error_callback,
     ]:
-        for k,v in kwarg.items():
+        for k, v in kwarg.items():
             if v is not None:
-                kwargs += ' ' + k + '="' + str(v) + '"'
+                kwargs += " " + k + '="' + str(v) + '"'
 
     return BASE_HTML.format(kwargs)
 
-async def verify(
-    secret,
-    response,
-    remoteip=None,
-):
-    '''
+
+async def verify(secret, response, remoteip=None):
+    """
     Returns None if Recaptcha's response is valid, raises error
 
     Arguments:
@@ -261,26 +266,26 @@ async def verify(
             * Optional
 
             * The user's IP address.
-    '''
+    """
 
-    data = dict(secret=secret,response=response)
+    data = dict(secret=secret, response=response)
     if remoteip is not None:
-        data['remoteip'] = remoteip
+        data["remoteip"] = remoteip
     form = urlencode(data)
 
     async with aiohttp.ClientSession() as sess:
         async with sess.post(
             url=RECAPTCHA_VERIFY_URL,
             data=form,
-            headers={'Content-Type': 'application/x-www-form-urlencoded'}
+            headers={"Content-Type": "application/x-www-form-urlencoded"},
         ) as http_resp:
             json_resp = await http_resp.json()
 
-    if json_resp.get('success') is True:
+    if json_resp.get("success") is True:
         return
 
-    for error_code in json_resp.get('error-codes', []):
+    for error_code in json_resp.get("error-codes", []):
         if error_code in RECAPTCHA_ERROR_CODES:
             raise RecaptchaError(RECAPTCHA_ERROR_CODES[error_code])
-    
-    raise RecaptchaError('Unknown response type: ' + str(json_resp))
+
+    raise RecaptchaError("Unknown response type: " + str(json_resp))
