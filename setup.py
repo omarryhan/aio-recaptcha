@@ -1,12 +1,12 @@
 import setuptools
 import os
 
-with open("README.md") as readmef:
+with open("README.md", encoding="utf-8") as readmef:
     readme = readmef.read()
 
 setuptools.setup(
     name="aio-recaptcha",
-    version="0.0.8",
+    version="0.0.9",
     author="Omar Ryhan",
     author_email="omarryhan@gmail.com",
     license="MIT",
