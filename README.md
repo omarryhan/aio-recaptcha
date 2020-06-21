@@ -45,6 +45,101 @@ async def verify_recaptcha(response_received_from_form):
     coro verify()
     exc RecaptchaError
 
+### `aiorecaptcha.html()`
+
+    Get HTML <div> used by Recaptcha's JS script
+    Arguments:
+
+        site_key:
+            * Required
+            * Your Sitekey
+        theme:
+            * The color theme of the widget.
+            * Optional
+            * One of: (dark, light)
+            * Default: light
+        badge:
+            * Reposition the reCAPTCHA badge. 'inline' lets you position it with CSS.
+            * Optional
+            * One of: ('bottomright', 'bottomleft', 'inline')
+            * Default: None
+        size:
+            * Optional
+            * The size of the widget
+            * One of: ("compact", "normal", "invisible")
+            * Default: normal
+        type_:
+            * Optional
+            * One of: ('image', 'audio')
+            * Default: 'image'
+        tabindex (int):
+            * Optional
+            * The tabindex of the widget and challenge. 
+            
+            * If other elements in your page use tabindex, it should be set to make user navigation easier.
+            * Default: 0
+        callback (str):
+            * Optional
+            * The name of your callback function, executed when the user submits a successful response.
+            * The **g-recaptcha-response** token is passed to your callback.
+        expired_callback (str):
+            * Opional
+            * The name of your callback function, executed when the reCAPTCHA response expires and the user needs to re-verify.
+        error_callback (str):
+            * Optional
+            * The name of your callback function, executed when reCAPTCHA encounters an error 
+                (usually network connectivity) and cannot continue until connectivity is restored.
+            * If you specify a function here, you are responsible for informing the user that they should retry.
+
+### `aiorecaptcha.js()`
+
+    Get JS script that loads the Recaptcha V2/V3 script
+
+    Appending this script to your HTML will expose the following API:
+        https://developers.google.com/recaptcha/docs/display#js_api
+        **If your html div is invisible, it will expose this API:**
+        https://developers.google.com/recaptcha/docs/invisible#js_api
+
+    Arguments:
+        onload (str):
+            * Optional
+            * The name of your callback function to be executed once all the dependencies have loaded.
+        render (str):
+            * Optional
+            
+            * Whether to render the widget explicitly. 
+              
+            * Defaults to onload, which will render the widget in the first g-recaptcha tag it finds.
+            * Either: ``"onload"`` or explicitly specify a widget value
+        language (str):
+            * Optional
+            * hl language code
+            * Reference: https://developers.google.com/recaptcha/docs/language
+        async_ (bool):
+            * Optional
+            * add async tag to JS script
+            * Default True
+        defer (bool):
+            * Optional
+            * Add def tag to JS Script
+            * Default True
+
+### `aiorecaptcha.verify()`
+
+    Returns None if Recaptcha's response is valid, raises error
+    Arguments:
+
+        secret:
+            * Required
+            * The shared key between your site and reCAPTCHA.
+        response:
+            * Required
+            * The user response token provided by reCAPTCHA, verifying the user on your site.
+            * Should be typically found as an item named: 'g-recaptcha-response'.
+        remoteip:
+            * Optional
+            * The user's IP address.
+
 ## Test
 
 Run:
