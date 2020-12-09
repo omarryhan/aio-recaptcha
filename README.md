@@ -1,7 +1,7 @@
 <p align="center">
   <img src="https://www.iprodev.com/wp-content/uploads/fraud-bot-home.png" alt="Logo" title="AioRecaptcha" height="200" width="200"/>
   <p align="center">
-    <a href="https://travis-ci.org/omarryhan/aio-recaptcha"><img alt="Build Status" src="https://travis-ci.org/omarryhan/aio-recaptcha.svg?branch=master"></a>
+    <a href="https://github.com/omarryhan/aio-recaptcha/actions?query=workflow%3ACI"><img alt="Build Status" src="https://github.com/omarryhan/aio-recaptcha/workflows/CI/badge.svg"></a>
     <a href="https://github.com/omarryhan/aio-recaptcha"><img alt="Software License" src="https://img.shields.io/badge/license-MIT-brightgreen.svg?style=flat-square"></a>
     <a href="https://github.com/python/black"><img alt="Code style: black" src="https://img.shields.io/badge/code%20style-black-000000.svg" /></a>
     <a href="https://pepy.tech/badge/aio-recaptcha"><img alt="Downloads" src="https://pepy.tech/badge/aio-recaptcha"></a>
@@ -29,7 +29,11 @@ def render_recaptcha():
 @app.route('/verify', methods=['POST'])
 async def verify_recaptcha(response_received_from_form):
     try:
-        await aiorecaptcha.verify(secret=client_secret, response=response_recieved_from_form)
+        await aiorecaptcha.verify(
+            secret=client_secret, 
+            response=response_recieved_from_form,
+            fail_for_less_than=0.55, # Recaptcha V3 only
+        )
 
     except recaptcha.RecaptchaError:
         return 'No! Only hoomans!'
@@ -139,6 +143,12 @@ async def verify_recaptcha(response_received_from_form):
         remoteip:
             * Optional
             * The user's IP address.
+        fail_for_less_than:
+            * Optional
+            * Only relevant for Recaptcha V3
+            * Default 0.5
+            * Read more about how to interpret the score here: https://developers.google.com/recaptcha/docs/v3#interpreting_the_score
+            * Fail for score less than this value.
 
 ## Test
 

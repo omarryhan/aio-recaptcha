@@ -241,7 +241,7 @@ def html(**kwargs):
     return BASE_HTML.format(kwargs)
 
 
-async def verify(secret, response, remoteip=None):
+async def verify(secret, response, remoteip=None, fail_for_less_than=0.5):
     """
     Returns None if Recaptcha's response is valid, raises error
 
@@ -266,6 +266,18 @@ async def verify(secret, response, remoteip=None):
             * Optional
 
             * The user's IP address.
+
+        fail_for_less_than:
+
+            * Optional
+
+            * Only relevant for Recaptcha V3
+
+            * Default 0.5
+
+            * Read more about how to interpret the score here: https://developers.google.com/recaptcha/docs/v3#interpreting_the_score
+
+            * Fail for score less than this value.
     """
 
     data = dict(secret=secret, response=response)
@@ -280,6 +292,12 @@ async def verify(secret, response, remoteip=None):
             headers={"Content-Type": "application/x-www-form-urlencoded"},
         ) as http_resp:
             json_resp = await http_resp.json()
+
+    score = json_resp.get('score')
+
+    if score is not None:
+        if score < fail_for_less_than:
+            raise RecaptchaError(f'Score doesn\'t meet the min. requirement of: {str(fail_for_less_than)}. Got: {str(score)}')
 
     if json_resp.get("success") is True:
         return
