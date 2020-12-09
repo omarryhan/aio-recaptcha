@@ -6,7 +6,7 @@ with open("README.md", encoding="utf-8") as readmef:
 
 setuptools.setup(
     name="aio-recaptcha",
-    version="0.0.9",
+    version="0.1.0",
     author="Omar Ryhan",
     author_email="omarryhan@gmail.com",
     license="MIT",
