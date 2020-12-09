@@ -82,7 +82,7 @@ def test_html_fails_on_extra_kwargs():
 
 
 def test_verify(event_loop):
-    if os.getenv("travis_is_ran_by_bots") == "true":
+    if os.getenv("in_ci") == "true":
         pytest.skip("Travis is ran by bots")
 
     TESTING_SITE_KEY = aiorecaptcha.TESTING_SITE_KEY
