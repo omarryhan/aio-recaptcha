@@ -130,7 +130,7 @@ async def verify_recaptcha(response_received_from_form):
 
 ### `aiorecaptcha.verify()`
 
-    Returns None if Recaptcha's response is valid, raises error
+    Raises `RecaptchaError` if Recaptcha's response is invalid. Else, returns None.
     Arguments:
 
         secret:
